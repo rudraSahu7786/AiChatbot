@@ -21,16 +21,20 @@ for message in st.session_state.messages:
 
 # React to user input
 if prompt := st.chat_input("What is up?"):
+    with st.spinner("Wait for it...", show_time=True):
     # Display user message in chat message container
-    st.chat_message("user").markdown(prompt)
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+        try:
+            st.chat_message("user").markdown(prompt)
+            # Add user message to chat history
+            st.session_state.messages.append({"role": "user", "content": prompt})
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash", contents=f"{prompt}"
-    )
-    # Display assistant response in chat message container
-    with st.chat_message("assistant"):
-        st.markdown(response.candidates[0].content.parts[0].text)
-    # Add assistant response to chat history
-    st.session_state.messages.append({"role": "assistant", "content": response.candidates[0].content.parts[0].text})
+            response = client.models.generate_content(
+                model="gemini-2.5-flash", contents=f"{prompt}"
+            )
+            # Display assistant response in chat message container
+            with st.chat_message("assistant"):
+                st.markdown(response.candidates[0].content.parts[0].text)
+            # Add assistant response to chat history
+            st.session_state.messages.append({"role": "assistant", "content": response.candidates[0].content.parts[0].text})
+        except Exception as e:
+            st.error(f"Error: {e}")
