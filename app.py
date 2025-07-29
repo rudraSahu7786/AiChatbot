@@ -1,40 +1,54 @@
 import os
 import streamlit as st
-import google.genai as genai
 from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain.prompts import PromptTemplate
+import google.generativeai as genai
 
+# Load API key from .env
 load_dotenv()
-
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Initialize Gemini LLM (using Flash-Lite or Gemini-Pro)
+llm = ChatGoogleGenerativeAI(
+    model="models/gemini-1.5-flash",  # or "gemini-1.5-flash", etc. if supported
+    temperature=0.3
+)
 
-# Setting up llm Gemini 
-api_key = os.getenv("GEMINI_API_KEY")
-st.title("Abhi GPT")
-client = genai.Client(api_key=api_key)
-# Display chat messages from history on app rerun
+st.title("🧠 Abhi GPT — Powered by Gemini")
+
+# Display previous messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# React to user input
-if prompt := st.chat_input("What is up?"):
-    with st.spinner("Wait for it...", show_time=True):
-    # Display user message in chat message container
+# Chat input
+if user_input := st.chat_input("Ask me anything..."):
+    # Show spinner while generating
+    with st.spinner("Thinking..."):
         try:
-            st.chat_message("user").markdown(prompt)
-            # Add user message to chat history
-            st.session_state.messages.append({"role": "user", "content": prompt})
+            # Save user's message to session state
+            st.session_state.messages.append({"role": "user", "content": user_input})
+            st.chat_message("user").markdown(user_input)
 
-            response = client.models.generate_content(
-                model="gemini-2.5-flash", contents=f"{prompt}"
-            )
-            # Display assistant response in chat message container
-            with st.chat_message("assistant"):
-                st.markdown(response.candidates[0].content.parts[0].text)
-            # Add assistant response to chat history
-            st.session_state.messages.append({"role": "assistant", "content": response.candidates[0].content.parts[0].text})
+            # Optional: Create a prompt template
+            template = """You are a helpful assistant. Answer the following:
+
+            Question: {question}
+
+            Answer:"""
+
+            prompt_template = PromptTemplate.from_template(template)
+            formatted_prompt = prompt_template.format(question=user_input)
+
+            # Generate response using LangChain + Gemini
+            response = llm.invoke(formatted_prompt)
+
+            # Show and store assistant response
+            st.chat_message("assistant").markdown(response.content)
+            st.session_state.messages.append({"role": "assistant", "content": response.content})
+
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.error(f"💥 Error: {e}")
