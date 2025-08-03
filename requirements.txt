@@ -1,8 +1,43 @@
-streamlit
-python-dotenv
-langchain
-langchain-google-genai
-google-generativeai
-cassio  # only if you're using Astra DB
+# Core Streamlit and Web Framework
+streamlit>=1.28.0  # Web app framework for building the UI interface
 
+# Environment Management
+python-dotenv>=1.0.0  # Load environment variables from .env file for API keys
 
+# LangChain Core and Components
+langchain>=0.1.0  # Main LangChain library for LLM chains, prompts, and document processing
+langchain-community>=0.0.10  # Community integrations and vector stores like AstraDB
+langchain-google-genai>=1.0.0  # Google Gemini integration for ChatGoogleGenerativeAI
+
+# Google AI and Generative AI
+google-generativeai>=0.3.0  # Google's Gemini API client for direct API access
+
+# Vector Database and Embeddings
+sentence-transformers>=2.2.0  # Create text embeddings using HuggingFace models
+langchain-astradb>=0.1.0  # AstraDB vector store integration for LangChain
+astrapy>=0.7.0  # AstraDB Python client for vector database operations
+
+# Document Processing
+PyMuPDF>=1.23.0  # PDF text extraction (imported as 'fitz')
+python-docx>=1.1.0  # DOCX file reading and text extraction
+
+# Text Processing and Splitting
+tiktoken>=0.5.0  # Token counting and text encoding for OpenAI models
+
+# HTTP Requests and Utilities
+requests>=2.31.0  # HTTP requests for API calls and web scraping
+urllib3>=2.0.0  # HTTP client library dependency
+
+# Data Processing
+numpy>=1.24.0  # Numerical computing for vector operations
+pandas>=2.0.0  # Data manipulation and analysis
+
+# Hugging Face Transformers (for embeddings)
+transformers>=4.30.0  # Hugging Face transformer models for embeddings
+torch>=2.0.0  # PyTorch backend for transformer models
+
+# Optional: For better performance
+faiss-cpu>=1.7.4  # Facebook AI Similarity Search for faster vector operations
+
+# Logging and Debugging
+colorlog>=6.7.0  # Colored logging output for better debugging
