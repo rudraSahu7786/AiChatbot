@@ -19,7 +19,7 @@ from retrieval import retrieve_relevant_docs
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash-exp")
-st.title("🧠 Abhi GPT — Powered by Gemini")
+st.title("🧠 Abhi GPT — Trained on AI concepts")
 
 # Initialize session state
 if "messages" not in st.session_state:
